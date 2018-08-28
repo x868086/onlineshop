@@ -36,8 +36,8 @@
                         <li v-for="(img,index) in goodlist"
                         v-bind:key="index">
                         <div class="pic">
-                            <a href="#"><img v-bind:src="img.productImage" alt=""></a>
-                            <!-- <a href="#"><img v-lazy="'../../static/1.jpg'" alt=""></a> -->
+                            <!-- <a href="#"><img v-bind:src="img.productImage" alt=""></a> -->
+                            <a href="#"><img v-lazy="img.productImage" alt=""></a>
                         </div>
                         <div class="main">
                             <div class="name">{{img.productName}}</div>
