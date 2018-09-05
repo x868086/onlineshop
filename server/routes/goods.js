@@ -19,7 +19,19 @@ mongoose.connection.on("disconnected",()=>{
 
 
 router.get("/",(req,res,next)=>{
-    Goods.find({},(err,doc)=>{
+    //1.获取前端发起的查询参数
+    let sortParam=req.param('sortParam');
+    let pageNum=Number(req.param('pageNum'));
+    let pageSize=Number(req.param('pageSize'));
+    console.log(req)
+    //1.1根据页数和每页的数量计算要跳过的条数
+    let skips=(pageNum-1) * pageSize
+
+    //1.2创建查询结果实例并在查询结果中分页
+    let modelQuery=Goods.find({}).skip(skips).limit(pageSize);
+    modelQuery.sort({'salePrice':sortParam})
+    //1.3查询结果实例query使用exec方法调用回调函数
+    modelQuery.exec((err,doc)=>{
         err? res.json({
             'status':0,
             'msg':err.message
@@ -29,7 +41,6 @@ router.get("/",(req,res,next)=>{
             'msg':'response done',
             'result':doc
         })
-        console.log(doc)
     })
 
 })

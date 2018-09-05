@@ -86,6 +86,7 @@ export default {
 
     methods:{
         getGoodsList(){
+        // rap mock数据
         // axios.get("http://rap2api.taobao.org/app/mock/83412/goodList").then(res=>{
         //     this.goodlist=res.data.productList;
         //     this.pricebetween=res.data.priceBetween;
