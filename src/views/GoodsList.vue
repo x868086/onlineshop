@@ -86,11 +86,18 @@ export default {
 
     methods:{
         getGoodsList(){
-        axios.get("http://rap2api.taobao.org/app/mock/83412/goodList").then(res=>{
-            this.goodlist=res.data.productList;
-            this.pricebetween=res.data.priceBetween;
-        })
+        // axios.get("http://rap2api.taobao.org/app/mock/83412/goodList").then(res=>{
+        //     this.goodlist=res.data.productList;
+        //     this.pricebetween=res.data.priceBetween;
+        // })
+        // },
+            axios.get("/goods").then(res=>{
+                console.log(res.data)
+                this.goodlist=res.data.result
+                this.pricebetween=['500-1000','1000-2000','2000-3000','3000-5000']
+            })
         },
+
         addcur(index){
             this.curidx=index
         }

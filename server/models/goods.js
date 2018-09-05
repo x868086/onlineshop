@@ -8,6 +8,6 @@ let productSchema=new Schema({
     "productUrl" : String
 })
 
-let Goods=mongoose.model("Goods",productSchema)
+let Good=mongoose.model("Good",productSchema)
 
-module.exports=Goods
+module.exports=Good
