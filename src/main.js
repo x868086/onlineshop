@@ -8,7 +8,10 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 
+//1.图片懒加载插件
 import VueLazyload from 'vue-lazyload';
+
+
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
@@ -16,6 +19,7 @@ Vue.use(VueLazyload, {
   loading: '../static/loading/loading-bars.svg',
   attempt: 1
 })
+
 
 new Vue({
   el: '#app',
