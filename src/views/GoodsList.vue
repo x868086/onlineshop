@@ -26,7 +26,7 @@
                     v-bind:key="index">
                     <a href="javascript:void(0)"
                     v-on:click="addcur(index)"
-                    v-bind:class="{cur:index===curidx}">{{list}}</a>
+                    v-bind:class="{cur:index===curidx}">{{list[0]}}-{{list[1]}}</a>
                     </dd>
                     <!-- <dd>
                         <a href="javascript:void(0)">0 - 100</a>
@@ -42,7 +42,7 @@
                         v-bind:key="index">
                         <div class="pic">
                             <!-- <a href="#"><img v-bind:src="img.productImage" alt=""></a> -->
-                            <a href="#"><img v-lazy="img.productImage" alt=""></a>
+                            <a href="#"><img v-lazy="'../static/'+img.productImage" alt=""></a>
                         </div>
                         <div class="main">
                             <div class="name">{{img.productName}}</div>
@@ -88,7 +88,7 @@ export default {
         return {
             goodlist:null,
             goodscount:null,
-            pricebetween:null,
+            pricebetween:[[0,100],[100,500],[500,1000],[1000,2000],[2000,5000]],
             curidx:0,
             getParam:{
                 pageNum:1,
@@ -122,7 +122,7 @@ export default {
                         this.goodlist=res.data.result
                     }
 
-                    this.pricebetween=['500-1000','1000-2000','2000-3000','3000-5000']
+
                     this.goodscount=res.data.count
                     this.getParam.pageNum++;
                 }else{
@@ -135,6 +135,7 @@ export default {
 
         addcur(index){
             this.curidx=index
+            this.preceLever(index)
         },
 
         //1.点击排序按钮更改排序flag为1或-1,传到后台在mongodb中作为查询排序参数
@@ -161,6 +162,30 @@ export default {
                     this.getGoodsList(true)
                 }
             }, 1000);
+        },
+
+        preceLever(index){
+            this.goodlist=[]
+            this.getParam={
+                pageNum:1,
+                pageSize:8,
+                sortFlag:1
+            }
+            axios.get("/goods",{
+                params:Object.assign(this.getParam,{condition:'salePrice',
+                minvalue:this.pricebetween[index][0],maxvalue:this.pricebetween[index][1]})
+                }).then(res=>{
+                console.log(res.data)
+                if(res.data.status===1){
+                    this.goodlist=res.data.result
+                    this.goodscount=res.data.count
+                    this.getParam.pageNum++;
+                }else{
+                    console.log(res.data.msg)
+                    this.goodlist=[]
+                }
+
+            })
         }
 
     },
