@@ -48,7 +48,8 @@
                             <div class="name">{{img.productName}}</div>
                             <div class="price">{{img.salePrice}}</div>
                             <div class="btn-area">
-                            <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                            <a href="javascript:;" class="btn btn--m"
+                            v-on:click="addCartList(img.productId)">加入购物车</a>
                             </div>
                         </div>
                         </li>
@@ -112,7 +113,7 @@ export default {
         // },
             axios.get("/goods",{params:this.getParam}).then(res=>{
                 console.log(res.data)
-                if(res.data.status===1){
+                if(res.data.codeSet===1){
                     //3.3 如果是加载更多，商品数组拼接，如果不是加载更多直接赋值商品数组
                     if(isPage){
                         console.log(isPage)
@@ -176,7 +177,7 @@ export default {
                 minvalue:this.pricebetween[index][0],maxvalue:this.pricebetween[index][1]})
                 }).then(res=>{
                 console.log(res.data)
-                if(res.data.status===1){
+                if(res.data.codeSet===1){
                     this.goodlist=res.data.result
                     this.goodscount=res.data.count
                     this.getParam.pageNum++;
@@ -185,6 +186,13 @@ export default {
                     this.goodlist=[]
                 }
 
+            })
+        },
+
+        addCartList(productId){
+            axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
+                console.log(res.codeSet)
+                res.data.codeSet===1 ? alert('添加商品成功') : alert('添加商品失败')
             })
         }
 
