@@ -61,8 +61,8 @@ router.get("/",(req,res,next)=>{
 
 //2.1添加到购物车
 router.post("/addcart",(req,res,next)=>{
-    var productId=req.body.productId
-    var userId='100000077'
+    let productId=req.body.productId
+    let userId='100000077'
     
 //2.2 查询用户，匹配上之后继续查询前端POST的商品，然后在商品字段中增加
 //productNum和checked字段，将修改后的商品信息保存到用户的cartList字段
@@ -80,26 +80,19 @@ router.post("/addcart",(req,res,next)=>{
                             'msg':'query productId error'
                         })
                     }else{
-                        if(data.cartList.length>0){
-                            data.cartList.forEach((item)=>{
-                                if(item.productId===productId){
-                                    item.productNum ++
-                                }else{
-                                    doc.productNum=1;
-                                    doc.checked=1;
-                                    data.cartList.push(doc)
-                                }
-                            })
+                        //3.1前台提交的商品先遍历用户购物车数组，如果商品存在则数量++
+                        let inItem=data.cartList.find((e,i,a)=>{
+                            return e.productId===productId
+                        })
+                        if(inItem){
+                            inItem.productNum++
+                        //3.2如果商品不存在则push
                         }else{
                             doc.productNum=1;
                             doc.checked=1;
-                            data.cartList.push(doc)
+                            data.cartList.push(doc);
                         }
 
-                        
-
-
-                        
                         
                         //model的save方法，操作数据后必须将操作结果保存到数据库
                         data.save((err2,doc1)=>{
