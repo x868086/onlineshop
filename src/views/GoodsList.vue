@@ -28,9 +28,6 @@
                     v-on:click="addcur(index)"
                     v-bind:class="{cur:index===curidx}">{{list[0]}}-{{list[1]}}</a>
                     </dd>
-                    <!-- <dd>
-                        <a href="javascript:void(0)">0 - 100</a>
-                    </dd> -->
                     </dl>
                 </div>
 
