@@ -20,7 +20,6 @@ Vue.use(VueLazyload, {
   attempt: 1
 })
 
-
 new Vue({
   el: '#app',
   router,

@@ -190,10 +190,10 @@ export default {
         },
 
         addCartList(productId){
-            axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
-                console.log(res.codeSet)
-                res.data.codeSet===1 ? alert('添加商品成功') : alert('添加商品失败')
-            })
+                axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
+                    console.log(res.codeSet)
+                    res.data.codeSet===1 ? alert('添加商品成功') : alert('添加商品失败')
+                })
         }
 
     },

@@ -29,10 +29,16 @@
             <div class="navbar-menu-container">
                 <!--<a href="/" class="navbar-link">我的账户</a>-->
                 <span class="navbar-link"></span>
-                <a href="javascript:void(0)" class="navbar-link">Login</a>
-                <a href="javascript:void(0)" class="navbar-link">Logout</a>
+                <a href="javascript:void(0)" class="navbar-link" 
+                v-show="!!loginUser">{{userName}}</a>
+                <a href="javascript:void(0)" class="navbar-link" 
+                v-on:click="loginState=false"
+                v-show="!loginUser">Login</a>
+                <a href="javascript:void(0)" class="navbar-link"
+                v-on:click="logout"
+                v-show="!!loginUser">Logout</a>
                 <div class="navbar-cart-container">
-                <span class="navbar-cart-count"></span>
+                <span class="navbar-cart-count">2</span>
                 <a class="navbar-link navbar-cart-link" href="/#/cart">
                     <svg class="navbar-cart-logo">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -42,13 +48,81 @@
             </div>
             </div>
         </div>
+        <div class="md-modal modal-msg md-modal-transition md-show">
+          <div class="md-modal-inner" v-show="!loginState">
+            <div class="md-top">
+              <div class="md-title">Login in</div>
+              <button class="md-close" v-on:click="loginState=true">Close</button>
+            </div>
+            <div class="md-content">
+              <div class="confirm-tips">
+                <div class="error-wrap">
+                  <span class="error error-show" v-show="errTips">用户名或者密码错误</span>
+                </div>
+                <ul>
+                  <li class="regi_form_input">
+                    <i class="icon IconPeople"></i>
+                    <input type="text" tabindex="1" name="loginname"
+                    v-model="userName"  
+                    class="regi_login_input regi_login_input_left" placeholder="User Name">
+                  </li>
+                  <li class="regi_form_input noMargin">
+                    <i class="icon IconPwd"></i>
+                    <input type="password" tabindex="2"  name="password"
+                    v-model="userPwd"  
+                    class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="Password">
+                  </li>
+                </ul>
+              </div>
+              <div class="login-wrap">
+                <a href="javascript:;" class="btn-login"
+                v-on:click="getLogin">登  录</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md-overlay" v-show="!loginState"></div>
       </header>   
 </template>
 
 
 <script>
+import axios from 'axios';
+
 export default {
+    data(){
+        return {
+            userName:"",
+            userPwd:"",
+            loginUser:"",
+            errTips:false,
+            loginState:false,
+            userCartList:null
+        }
+    },
     
+    methods:{
+        getLogin(){
+            let userInfo={userName:this.userName,userPwd:this.userPwd}
+            axios.post('/users/login',userInfo).then((res)=>{
+                //1.1 从后端获取用户名后赋值给loginUser，要么为空，要么有用户名
+                this.loginUser=res.data.result
+                if(res.data.statusCode===1 && res.data.result){
+                    //1.2控制用户名密码错误提示是否显示
+                    this.errTips=false
+                    this.loginState=true
+                }else{
+                    this.errTips=true
+                    this.loginState=false
+                }
+            })
+        },
+        logout(){
+            //1.3登出，将登录用户信息清空，同时更改loginState
+            this.loginState=false
+            this.loginUser=""
+        }
+    }
 }
 </script>
 
