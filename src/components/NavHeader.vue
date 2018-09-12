@@ -90,6 +90,7 @@
 import axios from 'axios';
 
 export default {
+    //保存用户信息
     data(){
         return {
             userName:"",
