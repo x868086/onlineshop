@@ -97,7 +97,7 @@ export default {
             userPwd:"",
             loginUser:"",
             errTips:false,
-            loginState:false,
+            loginState:true,
             userCartList:null
         }
     },
@@ -120,8 +120,12 @@ export default {
         },
         logout(){
             //1.3登出，将登录用户信息清空，同时更改loginState
-            this.loginState=false
-            this.loginUser=""
+            axios.post('/users/logout').then(res=>{
+                if(res.data.statusCode===1){
+                    this.loginUser=res.data.result
+                }
+            })
+
         }
     }
 }
