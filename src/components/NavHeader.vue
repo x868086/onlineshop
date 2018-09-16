@@ -101,6 +101,10 @@ export default {
             userCartList:null
         }
     },
+
+    mounted:function(){
+        this.checkLogin()
+    },
     
     methods:{
         getLogin(){
@@ -126,6 +130,17 @@ export default {
                 }
             })
 
+        },
+        checkLogin:function(){
+            axios.get('/users/checkLogin').then((res)=>{
+                console.log(res.data)
+                if(res.data.statusCode===1 && res.data.result){
+                    this.loginUser=res.data.result
+                    this.userName=res.data.result
+                    this.errTips=false
+                    this.loginState=true
+                }
+            })
         }
     }
 }
