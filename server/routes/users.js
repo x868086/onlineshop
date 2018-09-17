@@ -53,13 +53,13 @@ router.get('/checkLogin',(req,res,next)=>{
           'statusCode':1,
           'msg':'已登录',
           'result':userCookie
-        })else{
-          res.json({
-            'statusCode':0,
-            'msg':'请登录',
-            'result':null
-          })
-        }
+        })
+      }else{
+        res.json({
+          'statusCode':0,
+          'msg':'请登录',
+          'result':null
+        })
       }
   })
 

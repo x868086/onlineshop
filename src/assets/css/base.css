@@ -880,6 +880,11 @@ a:hover {
   line-height: 40px;
 }
 
+.btn--m:hover{
+  background-color:lightcoral;
+  color:white;
+}
+
 .btn--s {
   height: 35px;
   line-height: 35px;

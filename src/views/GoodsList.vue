@@ -11,7 +11,7 @@
                 <a href="javascript:void(0)" class="default cur">Default</a>
                 <a href="javascript:void(0)" class="price"
                 v-on:click="sortgoods">Price 
-                    <svg class="icon icon-arrow-short">
+                    <svg class="icon icon-arrow-short" v-bind:class="{'sort-up':sortup}">
                         <use xlink:href="#icon-arrow-short"></use>
                     </svg>
                 </a>
@@ -61,9 +61,26 @@
                 </div>
             </div>
         </div>
+        <model v-bind:modelShow="modelShow" v-on:closeModel="modelDisplay">
+            <p slot="modelTips">未登录用户，请先登录后购买商品</p>
+            <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="modelDisplay">关闭</a>
+        </model>
+        <model v-bind:modelShow="modelShowLogin" v-on:closeModel="modelDisplay">
+            <p slot="modelTips">成功添加商品!</p>
+            <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="modelDisplay">继续购物</a>
+            <a href="/cart" class="btn btn--m" slot="modelClose">查看购物车</a>
+        </model>
         <nav-footer></nav-footer>
     </div>
 </template>
+
+<style>
+    .sort-up{
+        transform:rotate(180deg);
+        transition: all 0.3s ease-in;
+    }
+</style>
+
 
 <script>
 import '../assets/css/base.css';
@@ -76,6 +93,7 @@ import axios from 'axios';
 import NavHeader from '../components/NavHeader.vue';
 import NavFooter from '../components/NavFooter.vue';
 import NavBread from '../components/NavBread.vue';
+import model from '../components/model.vue';
 //2.分页，触底加载更多插件
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -88,11 +106,19 @@ export default {
             goodscount:null,
             pricebetween:[[0,100],[100,500],[500,1000],[1000,2000],[2000,5000]],
             curidx:0,
+            modelShow:false,
+            modelShowLogin:false,
             getParam:{
                 pageNum:1,
                 pageSize:8,
                 sortFlag:1
             }
+        }
+    },
+
+    computed:{
+        sortup(){
+            return this.getParam.sortFlag===1? true: false
         }
     },
 
@@ -189,8 +215,13 @@ export default {
         addCartList(productId){
                 axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
                     console.log(res.codeSet)
-                    res.data.codeSet===1 ? alert('添加商品成功') : alert(res.data.msg)
+                    res.data.codeSet===1 ? this.modelShowLogin=true : this.modelShow=true
                 })
+        },
+
+        modelDisplay(){
+            this.modelShow=false
+            this.modelShowLogin=false
         }
 
     },
@@ -199,7 +230,8 @@ export default {
         NavHeader,
         NavFooter,
         NavBread,
-        InfiniteLoading
+        InfiniteLoading,
+        model
     }
 }
 </script>
