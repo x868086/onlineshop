@@ -7,7 +7,7 @@ let productSchema=new Schema({
     "productImage" : String,
     "productUrl" : String,
     "productNum":Number,
-    "checked":Number
+    "checked":Boolean
 })
 
 let Good=mongoose.model("Good",productSchema)

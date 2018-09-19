@@ -28,6 +28,17 @@
         padding-left:45px;
         padding-right:45px;
     }
+
+    .md-content p{
+        font-size:16px;
+    }
+
+    .md-content .btn.btn--m{
+        margin-left:20px;
+        margin-right:20px;
+    }
+    
+
 </style>
 
 

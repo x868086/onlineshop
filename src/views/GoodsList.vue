@@ -68,7 +68,7 @@
         <model v-bind:modelShow="modelShowLogin" v-on:closeModel="modelDisplay">
             <p slot="modelTips">成功添加商品!</p>
             <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="modelDisplay">继续购物</a>
-            <a href="/cart" class="btn btn--m" slot="modelClose">查看购物车</a>
+            <router-link to="userCart" class="btn btn--m" slot="modelClose">查看购物车</router-link>
         </model>
         <nav-footer></nav-footer>
     </div>
@@ -79,6 +79,7 @@
         transform:rotate(180deg);
         transition: all 0.3s ease-in;
     }
+    
 </style>
 
 
@@ -135,12 +136,9 @@ export default {
         // })
         // },
             axios.get("/goods",{params:this.getParam}).then(res=>{
-                console.log(res.data)
                 if(res.data.codeSet===1){
                     //3.3 如果是加载更多，商品数组拼接，如果不是加载更多直接赋值商品数组
                     if(isPage){
-                        console.log(isPage)
-                        console.log(res.data.result)
                         this.goodlist=this.goodlist.concat(res.data.result)
                     }else{
                         this.goodlist=res.data.result
@@ -150,7 +148,6 @@ export default {
                     this.goodscount=res.data.count
                     this.getParam.pageNum++;
                 }else{
-                    console.log(res.data.msg)
                     this.goodlist=[]
                 }
 
@@ -199,13 +196,11 @@ export default {
                 params:Object.assign(this.getParam,{condition:'salePrice',
                 minvalue:this.pricebetween[index][0],maxvalue:this.pricebetween[index][1]})
                 }).then(res=>{
-                console.log(res.data)
                 if(res.data.codeSet===1){
                     this.goodlist=res.data.result
                     this.goodscount=res.data.count
                     this.getParam.pageNum++;
                 }else{
-                    console.log(res.data.msg)
                     this.goodlist=[]
                 }
 
@@ -214,7 +209,6 @@ export default {
 
         addCartList(productId){
                 axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
-                    console.log(res.codeSet)
                     res.data.codeSet===1 ? this.modelShowLogin=true : this.modelShow=true
                 })
         },

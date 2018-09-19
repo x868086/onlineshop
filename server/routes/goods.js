@@ -89,7 +89,7 @@ router.post("/addcart",(req,res,next)=>{
                         //3.2如果商品不存在则push
                         }else{
                             doc.productNum=1;
-                            doc.checked=1;
+                            doc.checked=true;
                             data.cartList.push(doc);
                         }
 

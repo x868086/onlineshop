@@ -63,5 +63,20 @@ router.get('/checkLogin',(req,res,next)=>{
       }
   })
 
+  router.get('/cartList',(req,res,next)=>{
+      let userId=req.cookies.userId
+      userModel.findOne({userId:userId},(err,doc)=>{
+        err? res.json({
+          'statusCode':0,
+          'msg':'获取用户信息失败',
+          'result':null          
+        }): res.json({
+          'statusCode':1,
+          'msg':'获取用户信息成功',
+          'result':doc.cartList           
+        })
+      })
+  })
+
 
 module.exports = router;

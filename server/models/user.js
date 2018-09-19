@@ -12,7 +12,7 @@ let userSchema=new Schema({
             "productName" : String,
             "productId" : String,
             "productNum" : String,
-            "checked" : String
+            "checked" : Boolean
         }
     ],
     'addressList':Array
