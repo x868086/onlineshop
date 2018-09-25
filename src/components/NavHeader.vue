@@ -123,10 +123,11 @@ export default {
             })
         },
         logout(){
-            //1.3登出，将登录用户信息清空，同时更改loginState
+            //1.3登出，将登录用户信息清空，同时更改loginState，并将路由指向首页
             axios.post('/users/logout').then(res=>{
                 if(res.data.statusCode===1){
                     this.loginUser=res.data.result
+                    this.$router.push({path:'/'})
                 }
             })
 

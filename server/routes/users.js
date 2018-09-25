@@ -7,6 +7,13 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+let resjson = (res,code,msg,result)=>{
+    res.json({
+      'statusCode':code,
+      'msg':msg,
+      'result':result
+    })
+}
 
 
 let loginMethod=(req,res,next)=>{
@@ -17,14 +24,14 @@ let loginMethod=(req,res,next)=>{
   
   userModel.findOne(param,(err,doc)=>{
     if(err){
-      res.json({'statusCode':0,'msg':err.message});
+      resjson(res,0,err.message,null)
     }else{
       if(doc){
         res.cookie('userId',doc.userId,{'path':'/','maxAge':1000*60*60*24});
         res.cookie('userName',doc.userName,{'path':'/','maxAge':1000*60*60*24});
-        res.json({'statusCode':1,'msg':'login auth...','result':doc.userName});
+        resjson(res,1,'login auth...',doc.userName)
       }else{
-        res.json({'statusCode':1,'msg':'user not find','result':null});
+        resjson(res,1,'user not find',null)
       }
     }
   })
@@ -48,34 +55,29 @@ router.post('/logout', function(req, res, next) {
 router.get('/checkLogin',(req,res,next)=>{
       let userCookie=req.cookies.userName
       console.log(userCookie)
-      if(userCookie){
-        res.json({
-          'statusCode':1,
-          'msg':'已登录',
-          'result':userCookie
-        })
-      }else{
-        res.json({
-          'statusCode':0,
-          'msg':'请登录',
-          'result':null
-        })
-      }
+      userCookie? resjson(res,1,'已登录',userCookie): resjson(res,0,'请登录',null)  
   })
 
   router.get('/cartList',(req,res,next)=>{
       let userId=req.cookies.userId
       userModel.findOne({userId:userId},(err,doc)=>{
-        err? res.json({
-          'statusCode':0,
-          'msg':'获取用户信息失败',
-          'result':null          
-        }): res.json({
-          'statusCode':1,
-          'msg':'获取用户信息成功',
-          'result':doc.cartList           
-        })
+        err? resjson(res,0,'获取用户信息失败',null) : resjson(res,1,'获取用户信息成功',doc.cartList) 
       })
+  })
+
+  router.post('/delpd',(req,res,next)=>{
+    let productId=req.body.productId,
+        userId=req.cookies.userId
+        userModel.update({
+          userId:userId
+        },{
+          $pull:{
+            'cartList':{'productId':productId}
+          }
+        },(err,doc)=>{
+          err? resjson(res,0,'删除数据失败',null) : resjson(res,1,'删除数据成功',doc)
+        });
+
   })
 
 

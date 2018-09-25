@@ -97,7 +97,8 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn"
+                    v-on:click="removeConfirm(item.productId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -134,7 +135,8 @@
     </div>
     <model v-bind:modelShow="modelShow" v-on:closeModel="modelDisplay">
       <p slot="modelTips">你确认要删除此条数据吗?</p>
-        <a class="btn btn--m" href="javascript:;" slot="modelClose">确认</a>
+        <a class="btn btn--m" href="javascript:;" slot="modelClose"
+        v-on:click="delcart">确认</a>
         <a class="btn btn--m btn--red" href="javascript:;" slot="modelClose"
         v-on:click="modelDisplay">关闭</a>
     </model>
@@ -185,7 +187,8 @@ export default {
     data(){
         return {
             userCartList:null,
-            modelShow:true
+            modelShow:false,
+            productId:''
         }
     },
 
@@ -196,12 +199,21 @@ export default {
     methods:{
         init(){
             axios.get("/users/cartList").then((res)=>{
-                console.log(res.data)
                 this.userCartList=res.data.result
             })
         },
         modelDisplay(){
             this.modelShow=false
+        },
+        removeConfirm(productid){
+            this.modelShow=true
+            this.productId=productid
+        },
+        delcart(){
+          axios.post("/users/delpd",{'productId':this.productId}).then((res)=>{
+            this.modelShow=false
+            this.init()
+          })
         }
 
     },
