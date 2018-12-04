@@ -4,7 +4,7 @@ var mongoose=require('mongoose')
 var Goods=require('../models/goods.js') //加载goods实体model模块
 var Users=require('../models/user.js') //加载user实体model模块
 
-mongoose.connect('mongodb://root:123456@127.0.0.1:27017/shop');
+mongoose.connect('mongodb://shopadmin:123456@127.0.0.1:27017/shop');
 
 mongoose.connection.on("connected",()=>{
     console.log("mongodb connected")
