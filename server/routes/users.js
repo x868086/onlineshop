@@ -89,7 +89,7 @@ router.get('/checkLogin',(req,res,next)=>{
           "cartList.productId":productId
         },{
           $set:{
-            "cartList[0].productNum":productNum
+            "cartList.$.productNum":productNum
           }
         },(err,doc)=>{
           err? resjson(res,0,'修改数据失败',null) : resjson(res,1,'修改数据成功',doc)
