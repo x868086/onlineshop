@@ -80,5 +80,22 @@ router.get('/checkLogin',(req,res,next)=>{
 
   })
 
+  router.post('/setnum',(req,res,next)=>{
+    let productId=req.body.productId,
+        productNum=req.body.productNum,
+        userId=req.cookies.userId
+        userModel.update({
+          "userId":userId,
+          "cartList.productId":productId
+        },{
+          $set:{
+            "cartList[0].productNum":productNum
+          }
+        },(err,doc)=>{
+          err? resjson(res,0,'修改数据失败',null) : resjson(res,1,'修改数据成功',doc)
+        });
+
+  })
+
 
 module.exports = router;

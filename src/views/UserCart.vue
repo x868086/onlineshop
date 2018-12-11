@@ -85,9 +85,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub" >-</a>
+                        <a class="input-sub" @click="setProductNum(-1,item)">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add">+</a>
+                        <a class="input-add" @click="setProductNum(1,item)">+</a>
                       </div>
                     </div>
                   </div>
@@ -213,6 +213,19 @@ export default {
           axios.post("/users/delpd",{'productId':this.productId}).then((res)=>{
             this.modelShow=false
             this.init()
+          })
+        },
+        setProductNum(val,item){ 
+          this.productId = item.productId;
+          (val === 1)? item.productNum++ : "";
+          if(val === -1){
+            if(item.productNum < 2) {
+              return item.productNum = "1"
+            }
+            item.productNum--;
+          }
+          axios.post("/users/setnum",{'productId':this.productId,'productNum':item.productNum}).then(res=>{
+            console.log(this.userCartList)
           })
         }
 
