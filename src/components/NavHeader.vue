@@ -37,9 +37,9 @@
                 <a href="javascript:void(0)" class="navbar-link"
                 v-on:click="logout"
                 v-show="!!loginUser">Logout</a>
-                <div class="navbar-cart-container">
+                <div class="navbar-cart-container" v-show="!!loginUser">
                 <span class="navbar-cart-count">2</span>
-                <a class="navbar-link navbar-cart-link" href="/#/cart">
+                <a class="navbar-link navbar-cart-link" href="/#/userCart">
                     <svg class="navbar-cart-logo">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
                     </svg>

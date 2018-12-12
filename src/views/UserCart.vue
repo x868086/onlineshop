@@ -63,8 +63,8 @@
             <ul class="cart-item-list">
               <li v-for="item in userCartList">
                 <div class="cart-tab-1">
-                  <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn" 
+                  <div class="cart-item-check" @click="chooseProduct(item)">
+                    <a class="checkbox-btn item-check-btn" 
                     v-bind:class="{check:item.checked}">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
@@ -93,7 +93,7 @@
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">{{(item.productNum*item.salePrice)}}</div>
+                  <div class="item-price-total">{{(item.productNum*item.salePrice) | currency('￥')}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -112,9 +112,9 @@
         <div class="cart-foot-wrap">
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
-              <div class="item-all-check">
-                <a href="javascipt:;" >
-                  <span class="checkbox-btn item-check-btn">
+              <div class="item-all-check" @click="chooseAll">
+                <a>
+                  <span class="checkbox-btn item-check-btn" v-bind:class="{check:selectAll}">
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
                   <span>Select all</span>
@@ -123,7 +123,7 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                <!-- Item total: <span class="total-price">{{totalPrice | currency('$')}}</span> -->
+                Item total: <span class="total-price">{{totalPrice | currency('￥')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">Checkout</a>
@@ -170,7 +170,6 @@
     text-align: center;
   }
 
-  
 </style>
 
 
@@ -192,7 +191,29 @@ export default {
         }
     },
 
-    created(){
+    computed:{
+      totalPrice(){
+        let total = 0;
+        if(this.userCartList){
+            this.userCartList.forEach((e)=>{
+              if(e.checked){
+                total += e.salePrice*e.productNum
+              }
+          })
+        }
+        return total
+      },
+
+      selectAll(){
+        if(this.userCartList){
+          return this.userCartList.every((e)=>{
+          return e.checked === true
+          })
+        }
+      }
+    },
+
+    mounted(){
         this.init()
     },
 
@@ -225,7 +246,17 @@ export default {
             item.productNum--;
           }
           axios.post("/users/setnum",{'productId':this.productId,'productNum':item.productNum}).then(res=>{
-            console.log(this.userCartList)
+          }).catch(err => {
+            console.log(err)
+          })
+        },
+        chooseProduct(item){
+          item.checked = !item.checked
+        },
+        chooseAll(){
+          let flag = !this.selectAll;
+          this.userCartList.forEach((e) => {
+            e.checked = flag
           })
         }
 

@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import router from './router'
+import {currency} from './utils/currency'
 
 
 Vue.config.productionTip = false
@@ -19,6 +20,8 @@ Vue.use(VueLazyload, {
   loading: '../static/loading/loading-bars.svg',
   attempt: 1
 })
+
+Vue.filter("currency",currency)
 
 new Vue({
   el: '#app',
