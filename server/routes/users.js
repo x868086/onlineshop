@@ -31,7 +31,7 @@ let loginMethod=(req,res,next)=>{
         res.cookie('userName',doc.userName,{'path':'/','maxAge':1000*60*60*24});
         resjson(res,1,'login auth...',doc.userName)
       }else{
-        resjson(res,1,'user not find',null)
+        resjson(res,1,'user not find',err.message)
       }
     }
   })
@@ -55,13 +55,13 @@ router.post('/logout', function(req, res, next) {
 router.get('/checkLogin',(req,res,next)=>{
       let userCookie=req.cookies.userName
       console.log(userCookie)
-      userCookie? resjson(res,1,'已登录',userCookie): resjson(res,0,'请登录',null)  
+      userCookie? resjson(res,1,'已登录',userCookie): resjson(res,0,'请登录',err.message)  
   })
 
   router.get('/cartList',(req,res,next)=>{
       let userId=req.cookies.userId
       userModel.findOne({userId:userId},(err,doc)=>{
-        err? resjson(res,0,'获取用户信息失败',null) : resjson(res,1,'获取用户信息成功',doc.cartList) 
+        err? resjson(res,0,'获取用户信息失败',err.message) : resjson(res,1,'获取用户信息成功',doc.cartList) 
       })
   })
 
@@ -75,7 +75,7 @@ router.get('/checkLogin',(req,res,next)=>{
             'cartList':{'productId':productId}
           }
         },(err,doc)=>{
-          err? resjson(res,0,'删除数据失败',null) : resjson(res,1,'删除数据成功',doc)
+          err? resjson(res,0,'删除数据失败',err.message) : resjson(res,1,'删除数据成功',doc)
         });
 
   })
@@ -92,9 +92,18 @@ router.get('/checkLogin',(req,res,next)=>{
             "cartList.$.productNum":productNum
           }
         },(err,doc)=>{
-          err? resjson(res,0,'修改数据失败',null) : resjson(res,1,'修改数据成功',doc)
+          err? resjson(res,0,'修改数据失败',err.message) : resjson(res,1,'修改数据成功',doc)
         });
 
+  })
+
+  router.get('/address', (req, res, next) => {
+    let userId = req.cookies.userId
+    userModel.findOne({
+      "userId":userId
+    }, (err, doc) => {
+      err? resjson(res,0,'获取地址数据失败',err.message) : resjson(res,1,'获取地址数据成功',doc.addressList)
+    })
   })
 
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import GoodList from '../views/GoodsList.vue';
 import UserCart from '../views/UserCart.vue';
+import Address from '../views/Address.vue';
 
 Vue.use(Router)
 
@@ -12,10 +13,17 @@ export default new Router({
       name: 'goodlist',
       component: GoodList
     },
-        {
+    
+    {
       path: '/userCart',
       name: 'cart',
       component: UserCart
+    },
+
+    {
+      path: '/address',
+      name: 'address',
+      component: Address
     }
   ]
 })

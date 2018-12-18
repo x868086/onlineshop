@@ -126,7 +126,10 @@
                 Item total: <span class="total-price">{{totalPrice | currency('￥')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">Checkout</a>
+                <a class="btn btn--red" 
+                v-bind:class="{'btn--dis':selectCount === 0}"
+                @click="checkout"
+                >Checkout</a>
               </div>
             </div>
           </div>
@@ -195,7 +198,7 @@ export default {
       totalPrice(){
         let total = 0;
         if(this.userCartList){
-            this.userCartList.forEach((e)=>{
+            this.userCartList.forEach((e) => {
               if(e.checked){
                 total += e.salePrice*e.productNum
               }
@@ -206,9 +209,19 @@ export default {
 
       selectAll(){
         if(this.userCartList){
-          return this.userCartList.every((e)=>{
+          return this.userCartList.every((e) => {
           return e.checked === true
           })
+        }
+      },
+
+      selectCount(){
+        let count = 0
+        if(this.userCartList){
+          this.userCartList.forEach((e) => {
+            (e.checked)? count += 1 :'';
+          })
+          return count
         }
       }
     },
@@ -223,19 +236,23 @@ export default {
                 this.userCartList=res.data.result
             })
         },
+
         modelDisplay(){
             this.modelShow=false
         },
+
         removeConfirm(productid){
             this.modelShow=true
             this.productId=productid
         },
+
         delcart(){
           axios.post("/users/delpd",{'productId':this.productId}).then((res)=>{
             this.modelShow=false
             this.init()
           })
         },
+
         setProductNum(val,item){ 
           this.productId = item.productId;
           (val === 1)? item.productNum++ : "";
@@ -250,14 +267,21 @@ export default {
             console.log(err)
           })
         },
+
         chooseProduct(item){
           item.checked = !item.checked
         },
+
         chooseAll(){
           let flag = !this.selectAll;
           this.userCartList.forEach((e) => {
             e.checked = flag
           })
+        },
+
+        checkout(){
+          if(this.selectCount === 0) return
+          this.$router.push({path:'/address'})
         }
 
     },
