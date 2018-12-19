@@ -119,6 +119,8 @@ router.get('/checkLogin',(req,res,next)=>{
         addressList.forEach((e, i, a) => {
           if(e.addressId === addressId){
             e.isDefault = true
+            a.splice(i,1)
+            a.unshift(e)
           } else {
             e.isDefault = false
           }
