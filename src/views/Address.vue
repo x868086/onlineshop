@@ -68,7 +68,7 @@
         <div class="addr-list-wrap">
             <div class="addr-list">
             <ul>
-                <li v-for="(item,idx) in addressListFilter" 
+                <li v-for="(item, idx) in addressListFilter" 
                 @click="selectAddress(idx, item.addressId)" 
                 v-bind:class="{'check':selectIndex === idx}">
                 <dl>
@@ -81,7 +81,9 @@
                     <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                     </a>
                 </div>
-                <div class="addr-opration addr-set-default" v-show="item.isDefault === false">
+                <div class="addr-opration addr-set-default" 
+                v-show="item.isDefault === false"
+                v-on:click="setDefault(item)">
                     <a href="javascript:;" class="addr-set-default-btn"><i>Set default</i></a>
                 </div>
                 <div class="addr-opration addr-default" v-show="item.isDefault === true">Default address</div>
@@ -190,6 +192,16 @@ export default {
         selectAddress(idx,id){
             this.selectIndex = idx
             this.selectAddressId = id
+        },
+
+        setDefault(item){
+            let id=item.addressId
+            axios.post('users/setdefault',{id:id}).then((response) => {
+                let res = response.data
+                if(res.statusCode === 1){
+                    this.init()
+                }
+            })
         }
     },
     

@@ -106,5 +106,28 @@ router.get('/checkLogin',(req,res,next)=>{
     })
   })
 
+  router.post('/setdefault', (req, res, next) =>{
+    let userId = req.cookies.userId,
+        addressId = req.body.id
+    userModel.findOne({
+      "userId":userId
+    }, (err, doc) => {
+      if(err){
+        resjson(res, 0, '设置默认地址数据失败', err.message)
+      } else{
+        let addressList = doc.addressList
+        addressList.forEach((e, i, a) => {
+          if(e.addressId === addressId){
+            e.isDefault = true
+          } else {
+            e.isDefault = false
+          }
+        })
+        resjson(res, 1, '获取地址数据成功', doc)
+      }
+       doc.save()
+    })
+  })
+
 
 module.exports = router;
