@@ -102,7 +102,7 @@ router.get('/checkLogin',(req,res,next)=>{
     userModel.findOne({
       "userId":userId
     }, (err, doc) => {
-      err? resjson(res,0,'获取地址数据失败',err) : resjson(res,1,'获取地址数据成功',doc.addressList)
+      err? resjson(res,0,'获取地址数据失败',err) : resjson(res,1,'获取地址数据成功',doc)
     })
   })
 

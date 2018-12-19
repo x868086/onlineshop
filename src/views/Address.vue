@@ -174,8 +174,8 @@ export default {
     methods:{
         init(){
             axios.get('/users/address').then((response) => {
-                let res=response
-                this.addressList=res.data.result
+                let res=response.data.result.addressList
+                this.addressList=res
             })
         },
 
