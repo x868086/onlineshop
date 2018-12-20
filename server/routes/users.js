@@ -65,6 +65,28 @@ router.get('/checkLogin',(req,res,next)=>{
       })
   })
 
+  //修改购物车中的checked
+  router.post('/updateCartList', (req, res, next) =>{
+      let userId = req.cookies.userId,
+          productId = req.body.productId,
+          flag = req.body.flag
+      userModel.updateOne({
+        "userId": userId,
+        "cartList.productId":productId
+      },{
+        $set:{
+          "cartList.$.checked":flag
+        }
+      },(err, doc) => {
+        if(err){
+          return resjson(res,0,'修改数据失败',err)
+        } else{
+          return resjson(res,1,'修改数据成功',doc)
+        }
+      })
+    })
+
+    //删除购物车商品
   router.post('/delpd',(req,res,next)=>{
     let productId=req.body.productId,
         userId=req.cookies.userId
@@ -80,6 +102,7 @@ router.get('/checkLogin',(req,res,next)=>{
 
   })
 
+    //修改购物车中商品数量
   router.post('/setnum',(req,res,next)=>{
     let productId=req.body.productId,
         productNum=req.body.productNum,
@@ -97,6 +120,7 @@ router.get('/checkLogin',(req,res,next)=>{
 
   })
 
+  //获取用户收获地址信息
   router.get('/address', (req, res, next) => {
     let userId = req.cookies.userId
     userModel.findOne({
@@ -106,6 +130,7 @@ router.get('/checkLogin',(req,res,next)=>{
     })
   })
 
+  //设置默认收货地址
   router.post('/setdefault', (req, res, next) =>{
     let userId = req.cookies.userId,
         addressId = req.body.id
@@ -131,6 +156,7 @@ router.get('/checkLogin',(req,res,next)=>{
     })
   })
 
+  //删除地址
   router.post('/deletaddress', (req, res, next) => {
     let userId = req.cookies.userId,
         addressId = req.body.id
@@ -146,6 +172,25 @@ router.get('/checkLogin',(req,res,next)=>{
       err? resjson(res,0,'删除地址信息失败',err) : resjson(res,1,'删除地址信息成功',doc)
     })
     )
+  })
+
+  //购物车确认
+  router.get('/cartListConfirm', (req, res, next) => {
+    let userId = req.cookies.userId
+        userModel.findOne({
+          "userId":userId
+        },(err, doc) => {
+          if(err){
+            return resjson(res,0,'获取订单数据失败',err)
+          }
+          let cartListConfirm = []
+          doc.cartList.forEach((e, i, a) =>{
+            if(e.checked === true){
+              cartListConfirm.push(e)
+            }
+          })
+          return resjson(res,1,'获取订单数据成功',cartListConfirm)
+        })
   })
 
 

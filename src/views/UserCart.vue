@@ -268,14 +268,22 @@ export default {
           })
         },
 
+        updateCartList(item,flag){
+            axios.post('/users/updateCartList',{'productId':item.productId,'flag':flag}).then( (response) => {
+              let res = response.data
+            })
+        },
+
         chooseProduct(item){
           item.checked = !item.checked
+          this.updateCartList(item,item.checked)
         },
 
         chooseAll(){
           let flag = !this.selectAll;
           this.userCartList.forEach((e) => {
             e.checked = flag
+            this.updateCartList(e,e.checked)
           })
         },
 
