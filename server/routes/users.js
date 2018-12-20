@@ -113,7 +113,7 @@ router.get('/checkLogin',(req,res,next)=>{
       "userId":userId
     }, (err, doc) => {
       if(err){
-        resjson(res, 0, '设置默认地址数据失败', err.message)
+        resjson(res, 0, '设置默认地址数据失败', err)
       } else{
         let addressList = doc.addressList
         addressList.forEach((e, i, a) => {
@@ -129,6 +129,23 @@ router.get('/checkLogin',(req,res,next)=>{
       }
        doc.save()
     })
+  })
+
+  router.post('/deletaddress', (req, res, next) => {
+    let userId = req.cookies.userId,
+        addressId = req.body.id
+    userModel.update({
+      "userId": userId
+    },{
+      "$pull":{
+        "addressList":{
+          "addressId":addressId
+        }
+      }
+    }, ((err, doc) => {
+      err? resjson(res,0,'删除地址信息失败',err) : resjson(res,1,'删除地址信息成功',doc)
+    })
+    )
   })
 
 

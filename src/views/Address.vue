@@ -76,7 +76,7 @@
                     <dd class="address">{{item.streetName}}</dd>
                     <dd class="tel">{{item.tel}}</dd>
                 </dl>
-                <div class="addr-opration addr-del">
+                <div class="addr-opration addr-del" v-on:click="deladdress(item)">
                     <a href="javascript:;" class="addr-del-btn">
                     <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                     </a>
@@ -133,11 +133,17 @@
             </div>
         </div>
         <div class="next-btn-wrap">
-            <a class="btn btn--m btn--red">Next</a>
+            <a class="btn btn--m btn--red" v-on:click="getConfirm(selectAddressId)">Next</a>
         </div>
         </div>
     </div>
     </div>
+    <model v-bind:modelShow="modelShow" v-on:closeModel="modelShow=false">
+        <p slot="modelTips">确定删除地址吗？</p>
+        <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="deletConfirm">确定</a>
+        <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="modelShow=false">取消</a>
+        <!-- <router-link to="address" class="btn btn--m" slot="modelClose" v-on:click="modelDisplay">取消</router-link> -->
+    </model>
     <nav-footer></nav-footer>
    </div>
 </template>
@@ -156,12 +162,14 @@ export default {
             addressList:null,
             limit:3,
             selectIndex:0,
-            selectAddressId:''
+            selectAddressId:'',
+            modelShow:false,
+            deletAddressId:''
         }
     },
 
     computed:{
-            addressListFilter(){
+        addressListFilter(){
             if(this.addressList){
                 return  this.addressList.slice(0,this.limit)
             }
@@ -178,6 +186,11 @@ export default {
             axios.get('/users/address').then((response) => {
                 let res=response.data.result.addressList
                 this.addressList=res
+                this.addressList.forEach((e, i, a) => {
+                    if(e.isDefault === true){
+                        this.selectAddressId = e.addressId
+                    }
+                })
             })
         },
 
@@ -195,6 +208,7 @@ export default {
         },
 
         setDefault(item){
+            this.selectAddressId = item.addressId
             let id=item.addressId
             axios.post('users/setdefault',{id:id}).then((response) => {
                 let res = response.data
@@ -202,6 +216,26 @@ export default {
                     this.init()
                 }
             })
+        },
+
+        deladdress(item){
+            this.deletAddressId = item.addressId
+            this.modelShow = true
+        },
+
+        deletConfirm(){
+            let id = this.deletAddressId
+            this.modelShow = false
+            axios.post('users/deletaddress',{id:id}).then((response) => {
+                let res = response.data
+                if(res.statusCode === 1){
+                    this.init()
+                }
+            })
+        },
+
+        getConfirm(){
+            this.$router.push({path: '/orderConfirm', query: {addressId:this.selectAddressId}})
         }
     },
     
