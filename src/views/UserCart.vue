@@ -230,6 +230,11 @@ export default {
         this.init()
     },
 
+    updated(){
+        // let abc = document.querySelector("html").innerHTML
+        // console.log(abc)
+    },
+
     methods:{
         init(){
             axios.get("/users/cartList").then((res)=>{

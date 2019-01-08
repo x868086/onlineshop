@@ -179,6 +179,8 @@ export default {
 
     mounted(){
         this.init()
+        let abc = this.$el
+        console.log(abc)
     },
 
     methods:{

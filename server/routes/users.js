@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var userModel=require('../models/user');
+var getOrderId = require('../utils/orderId')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -191,6 +192,28 @@ router.get('/checkLogin',(req,res,next)=>{
           })
           return resjson(res,1,'获取订单数据成功',cartListConfirm)
         })
+  })
+
+  //支付
+  router.post('/toPayment', (req, res, next) =>{
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId,
+        orderTotal = req.body.orderTotal
+        userModel.update({
+          "userId": userId
+        },{
+          "$push":{
+            "orderList":{
+              "orderId": addressId,
+              "orderTotal": orderTotal,
+              "orderStatus": 1,
+              "createDate": new Date().toLocaleString()
+            }
+          }
+        }, ((err, doc) => {
+          err? resjson(res,0,'订单支付失败!',err) : resjson(res,1,'订单支付成功!',doc)
+        })
+        )
   })
 
 

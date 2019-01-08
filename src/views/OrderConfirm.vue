@@ -120,10 +120,11 @@
 
             <div class="order-foot-wrap">
                 <div class="prev-btn-wrap">
-                <button class="btn btn--m">Previous</button>
+                <!-- <button class="btn btn--m">Previous</button> -->
+                <router-link to="/address" class="btn btn--m">Previous</router-link>
                 </div>
                 <div class="next-btn-wrap">
-                <button class="btn btn--m btn--red">Proceed to payment</button>
+                <button class="btn btn--m btn--red" v-on:click="toPayment">Proceed to payment</button>
                 </div>
             </div>
             </div>
@@ -171,12 +172,21 @@ export default {
     },
 
     methods:{
-        init(){
-            axios.get('/users/cartListConfirm').then((response) =>{
+        init() {
+            axios.get('/users/cartListConfirm').then((response) => {
                 let res = response.data
                 this.cartListConfirm = res.result               
             })
         },
+        toPayment() {
+            let addressId = this.$route.query.addressId,
+                orderTotal = this.ordertotal
+            axios.post('/users/toPayment',{addressId:addressId,orderTotal:orderTotal}).then((response) => {
+                let res = response.data
+                console.log(res)
+            })
+        }
+
     },
 
     components:{
