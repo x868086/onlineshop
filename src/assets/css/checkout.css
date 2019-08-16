@@ -151,12 +151,12 @@ html {
 }
 
 .check-step li.cur {
-  border-color: #d1434a;
-  color: #d1434a;
+  border-color: #F0A123;
+  color: #F0A123;
 }
 
 .check-step li.cur:after {
-  background: #d1434a;
+  background: #F0A123;
 }
 
 @media only screen and (max-width: 991px) {

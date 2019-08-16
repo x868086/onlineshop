@@ -32,30 +32,30 @@
         <div class="container">
             <div class="checkout-order">
             <div class="page-title-normal">
-                <h2 class="page-title-h2"><span>check out</span></h2>
+                <h2 class="page-title-h2"><span>订单预览</span></h2>
             </div>
             <!-- process step -->
             <div class="check-step">
                 <ul>
-                <li class="cur"><span>Confirm</span> address</li>
-                <li class="cur"><span>View your</span> order</li>
-                <li><span>Make</span> payment</li>
-                <li><span>Order</span> confirmation</li>
+                <li class="cur"><span></span> 收货地址</li>
+                <li class="cur"><span></span> 订单预览</li>
+                <li><span></span> 订单支付</li>
+                <li><span></span> 订单确认</li>
                 </ul>
             </div>
 
             <!-- order list -->
             <div class="page-title-normal checkout-title">
-                <h2><span>Order content</span></h2>
+                <h2><span>订单详情</span></h2>
             </div>
             <div class="item-list-wrap confirm-item-list-wrap">
                 <div class="cart-item order-item">
                 <div class="cart-item-head">
                     <ul>
-                    <li>Order contents</li>
-                    <li>Price</li>
-                    <li>Quantity</li>
-                    <li>Subtotal</li>
+                    <li>产品</li>
+                    <li>价格</li>
+                    <li>数量</li>
+                    <li>合计</li>
                     </ul>
                 </div>
                 <ul class="cart-item-list" >
@@ -96,23 +96,23 @@
                 <div class="price-count">
                 <ul>
                     <li>
-                    <span>Item subtotal:</span>
+                    <span>合计:</span>
                     <span>{{subtotal | currency('￥')}}</span>
                     </li>
                     <li>
-                    <span>Shipping:</span>
+                    <span>市内配送:</span>
                     <span>{{shipping | currency('￥')}}</span>
                     </li>
-                    <li>
+                    <!-- <li>
                     <span>Discount:</span>
                     <span>{{discount | currency('￥')}}</span>
-                    </li>
+                    </li> -->
                     <li>
                     <span>Tax:</span>
                     <span>{{tax | currency('￥')}}</span>
                     </li>
                     <li class="order-total-price">
-                    <span>Order total:</span>
+                    <span>总计:</span>
                     <span>{{ordertotal | currency('￥')}}</span>
                     </li>
                 </ul>
@@ -122,10 +122,10 @@
             <div class="order-foot-wrap">
                 <div class="prev-btn-wrap">
                 <!-- <button class="btn btn--m">Previous</button> -->
-                <router-link to="/address" class="btn btn--m">Previous</router-link>
+                <router-link to="/address" class="btn btn--m">上一步</router-link>
                 </div>
                 <div class="next-btn-wrap">
-                <button class="btn btn--m btn--red" v-on:click="toPayment">Proceed to payment</button>
+                <button class="btn btn--m btn--red" v-on:click="toPayment">订单支付</button>
                 </div>
             </div>
             </div>
@@ -148,9 +148,8 @@ export default {
     data(){
         return {
             cartListConfirm:[],
-            shipping:5,
-            discount:20,
-            tax:200,
+            shipping:0,
+            discount:0,
         }
     },
 
@@ -161,6 +160,9 @@ export default {
                 total += e.salePrice * e.productNum
             })
             return total
+        },
+        tax() {
+            return this.subtotal * 0.06
         },
 
         ordertotal(){
@@ -180,11 +182,12 @@ export default {
             })
         },
         toPayment() {
-            let addressId = this.$route.query.addressId,
+            let orderId = this.$route.query.orderId,
                 orderTotal = this.ordertotal
-            axios.post('/users/toPayment',{addressId:addressId,orderTotal:orderTotal}).then((response) => {
+            axios.post('/users/toPayment',{orderId:orderId,orderTotal:orderTotal}).then((response) => {
                 let res = response.data
                 console.log(res)
+                this.$router.push({path:'/orderSuccess',query: {orderId: orderId}})
             })
         }
 

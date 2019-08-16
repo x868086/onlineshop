@@ -10,7 +10,7 @@
     </div>
     </div> -->
     <nav-bread>
-        <span slot="bread">address</span>
+        <span slot="bread">收货地址</span>
     </nav-bread>
     <div class="checkout-page">
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -54,23 +54,24 @@
         <!-- process step -->
         <div class="check-step">
             <ul>
-            <li class="cur"><span>Confirm</span> address</li>
-            <li><span>View your</span> order</li>
-            <li><span>Make</span> payment</li>
-            <li><span>Order</span> confirmation</li>
+            <li class="cur"><span></span> 收货地址</li>
+            <li><span></span> 订单预览</li>
+            <li><span></span> 订单支付</li>
+            <li><span></span> 订单确认</li>
             </ul>
         </div>
 
         <!-- address list -->
         <div class="page-title-normal checkout-title">
-            <h2><span>Shipping address</span></h2>
+            <h2><span>我的收货地址</span></h2>
         </div>
         <div class="addr-list-wrap">
             <div class="addr-list">
             <ul>
                 <li v-for="(item, idx) in addressListFilter" 
                 @click="selectAddress(idx, item.addressId)" 
-                v-bind:class="{'check':selectIndex === idx}">
+                v-bind:class="{'check':selectIndex === idx}"
+                :key="idx">
                 <dl>
                     <dt>{{item.postCode}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
@@ -84,9 +85,9 @@
                 <div class="addr-opration addr-set-default" 
                 v-show="item.isDefault === false"
                 v-on:click="setDefault(item)">
-                    <a href="javascript:;" class="addr-set-default-btn"><i>Set default</i></a>
+                    <a href="javascript:;" class="addr-set-default-btn"><i>设置为默认</i></a>
                 </div>
-                <div class="addr-opration addr-default" v-show="item.isDefault === true">Default address</div>
+                <div class="addr-opration addr-default" v-show="item.isDefault === true">默认收货地址</div>
                 </li>
 
                 <li class="addr-new">
@@ -94,7 +95,7 @@
                     <i class="icon-add">
                     <svg class="icon icon-add"><use xlink:href="#icon-add"></use></svg>
                     </i>
-                    <p>Add new address</p>
+                    <p>添加收货地址</p>
                 </div>
                 </li>
             </ul>
@@ -103,7 +104,7 @@
 
             <div class="shipping-addr-more" @click="loadMore(limit)">
             <a class="addr-more-btn up-down-btn" href="javascript:;" v-bind:class="{'open':limit>3}">
-                more
+                更多
                 <i class="i-up-down">
                 <i class="i-up-down-l"></i>
                 <i class="i-up-down-r"></i>
@@ -113,7 +114,7 @@
         </div>
 
         <!-- shipping method-->
-        <div class="page-title-normal checkout-title">
+        <!-- <div class="page-title-normal checkout-title">
             <h2><span>Shipping method</span></h2>
         </div>
         <div class="lemall-msg-info hidden">
@@ -131,9 +132,9 @@
                 </li>
             </ul>
             </div>
-        </div>
+        </div> -->
         <div class="next-btn-wrap">
-            <a class="btn btn--m btn--red" v-on:click="getConfirm(selectAddressId)">Next</a>
+            <a class="btn btn--m btn--red" v-on:click="getConfirm(selectAddressId)">下一步</a>
         </div>
         </div>
     </div>
@@ -154,6 +155,7 @@ import NavHeader from '../components/NavHeader.vue';
 import NavFooter from '../components/NavFooter.vue';
 import NavBread from '../components/NavBread.vue';
 import model from '../components/model.vue';
+import OrderId from '../utils/orderid';
 
 import axios from 'axios';
 export default {
@@ -237,7 +239,7 @@ export default {
         },
 
         getConfirm(){
-            this.$router.push({path: '/orderConfirm', query: {addressId:this.selectAddressId}})
+            this.$router.push({path: '/orderConfirm', query: {orderId:OrderId()}})
         }
     },
     

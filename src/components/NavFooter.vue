@@ -11,8 +11,8 @@
                 </select>
                 </div>
                 <div class="footer__secondary__nav">
-                <span>Copyright © 2016 YCUNICOM All Rights Reserved.</span>
-                <a href="http://us.lemall.com/us/aboutUs.html">
+                <span>Copyright © 2017 YCUNICOM All Rights Reserved.</span>
+                <!-- <a href="http://us.lemall.com/us/aboutUs.html">
                     About Us
                 </a>
                 <a href="http://us.lemall.com/us/termsofUse.html">
@@ -20,7 +20,7 @@
                 </a>
                 <a href="http://us.lemall.com/us/privacyPolicy.html">
                     Privacy Policy
-                </a>
+                </a> -->
                 </div>
             </div>
             </div>

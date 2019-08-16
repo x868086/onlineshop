@@ -198,14 +198,14 @@ router.get('/checkLogin',(req,res,next)=>{
   //支付
   router.post('/toPayment', (req, res, next) =>{
     let userId = req.cookies.userId,
-        addressId = req.body.addressId,
+        orderId = req.body.orderId,
         orderTotal = req.body.orderTotal
         userModel.update({
           "userId": userId
         },{
           "$push":{
             "orderList":{
-              "orderId": addressId,
+              "orderId": orderId,
               "orderTotal": orderTotal,
               "orderStatus": 1,
               "createDate": new Date().toLocaleString()

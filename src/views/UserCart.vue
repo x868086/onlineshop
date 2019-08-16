@@ -47,17 +47,17 @@
     <div class="container">
       <div class="cart">
         <div class="page-title-normal">
-          <h2 class="page-title-h2"><span>My Cart</span></h2>
+          <h2 class="page-title-h2"><span>购物车</span></h2>
         </div>
         <div class="item-list-wrap">
           <div class="cart-item">
             <div class="cart-item-head">
               <ul>
-                <li>Items</li>
-                <li>Price</li>
-                <li>Quantity</li>
-                <li>Subtotal</li>
-                <li>Edit</li>
+                <li>产品</li>
+                <li>价格</li>
+                <li>数量</li>
+                <li>合计</li>
+                <li>编辑</li>
               </ul>
             </div>
             <ul class="cart-item-list">
@@ -118,19 +118,19 @@
                   <span class="checkbox-btn item-check-btn" v-bind:class="{check:selectAll}">
                       <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
                   </span>
-                  <span>Select all</span>
+                  <span>全选</span>
                 </a>
               </div>
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                Item total: <span class="total-price">{{totalPrice | currency('￥')}}</span>
+                合计: <span class="total-price">{{totalPrice | currency('￥')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red" 
                 v-bind:class="{'btn--dis':selectCount === 0}"
                 @click="checkout"
-                >Checkout</a>
+                >订单结算</a>
               </div>
             </div>
           </div>
