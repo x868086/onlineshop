@@ -2,7 +2,7 @@
     <div>
         <nav-header></nav-header>
         <nav-bread>
-            <span slot="bread">orderConfirm</span>
+            <span slot="bread">订单确认</span>
         </nav-bread>
         <div>
         <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -59,7 +59,8 @@
                     </ul>
                 </div>
                 <ul class="cart-item-list" >
-                    <li v-for="item in cartListConfirm">
+                    <li v-for="(item,idx) in cartListConfirm"
+                    :key="idx">
                     <div class="cart-tab-1">
                         <div class="cart-item-pic">
                         <img v-bind:src="`../static/`+item.productImage" alt="">

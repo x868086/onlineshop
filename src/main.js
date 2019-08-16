@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import router from './router'
 import {currency} from './utils/currency'
+import store from './store/index'
 
 
 Vue.config.productionTip = false
@@ -26,4 +27,5 @@ Vue.filter("currency",currency)
 new Vue({
   el: '#app',
   router,
+  store
 })

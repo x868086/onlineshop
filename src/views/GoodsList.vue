@@ -2,26 +2,26 @@
     <div>
         <nav-header></nav-header>
         <nav-bread>
-            <span slot="bread">Goods</span>
+            <span slot="bread">商品</span>
         </nav-bread>
         <div class="accessory-result-page accessory-page">
             <div class="container">
                 <div class="filter-nav">
-                <span class="sortby">Sort by:</span>
-                <a href="javascript:void(0)" class="default cur">Default</a>
+                <span class="sortby">排序 :</span>
+                <a href="javascript:void(0)" class="default cur">默认</a>
                 <a href="javascript:void(0)" class="price"
-                v-on:click="sortgoods">Price 
+                v-on:click="sortgoods">价格 
                     <svg class="icon icon-arrow-short" v-bind:class="{'sort-up':sortup}">
                         <use xlink:href="#icon-arrow-short"></use>
                     </svg>
                 </a>
-                <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+                <a href="javascript:void(0)" class="filterby stopPop">排序 </a>
                 </div>
                 <div class="accessory-result">
                 <!-- filter -->
                 <div class="filter stopPop" id="filter">
                     <dl class="filter-price">
-                    <dt>Price:</dt>
+                    <dt>售价</dt>
                     <dd v-for="(list,index) in pricebetween"
                     v-bind:key="index">
                     <a href="javascript:void(0)"
@@ -103,7 +103,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 export default {
     data(){
         return {
-            goodlist:null,
+            goodlist:[],
             goodscount:null,
             pricebetween:[[0,100],[100,500],[500,1000],[1000,2000],[2000,5000]],
             curidx:0,

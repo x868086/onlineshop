@@ -30,7 +30,8 @@ let loginMethod=(req,res,next)=>{
       if(doc){
         res.cookie('userId',doc.userId,{'path':'/','maxAge':1000*60*60*24});
         res.cookie('userName',doc.userName,{'path':'/','maxAge':1000*60*60*24});
-        resjson(res,1,'login auth...',doc.userName)
+        // resjson(res,1,'login auth...',doc.userName)
+        resjson(res,1,'login auth...',{userName:doc.userName,userId:doc.userId})
       }else{
         resjson(res,1,'user not find',err)
       }

@@ -2,7 +2,7 @@
     <div>
     <nav-header></nav-header>
         <nav-bread>
-            <span slot="bread">cart</span>
+            <span slot="bread">购物车</span>
         </nav-bread>
 
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1"
@@ -61,7 +61,8 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li v-for="item in userCartList">
+              <li v-for="(item,idx) in userCartList"
+              :key="idx">
                 <div class="cart-tab-1">
                   <div class="cart-item-check" @click="chooseProduct(item)">
                     <a class="checkbox-btn item-check-btn" 
@@ -184,6 +185,7 @@ import NavBread from '../components/NavBread.vue';
 import model from '../components/model.vue';
 
 import axios from 'axios';
+import {mapState, mapActions} from 'vuex'
 
 export default {
     data(){
@@ -195,6 +197,7 @@ export default {
     },
 
     computed:{
+      ...mapState(['userGoodsCount']),
       totalPrice(){
         let total = 0;
         if(this.userCartList){
@@ -236,9 +239,22 @@ export default {
     },
 
     methods:{
+        ...mapActions(['setUserGoodsCount']),
+        async getGoodsCount() {
+            const {data:{result}} = await axios.get('/users/cartList')
+            let count = 0
+            result.forEach((item) => {
+                if (item.checked) {
+                    count += parseInt(item.productNum)
+                }
+            })
+            this.setUserGoodsCount(count)
+            localStorage.setItem("userGoodsCount", count);
+        },        
         init(){
             axios.get("/users/cartList").then((res)=>{
                 this.userCartList=res.data.result
+                this.getGoodsCount()
             })
         },
 
@@ -268,6 +284,7 @@ export default {
             item.productNum--;
           }
           axios.post("/users/setnum",{'productId':this.productId,'productNum':item.productNum}).then(res=>{
+            this.getGoodsCount()
           }).catch(err => {
             console.log(err)
           })
@@ -276,6 +293,7 @@ export default {
         updateCartList(item,flag){
             axios.post('/users/updateCartList',{'productId':item.productId,'flag':flag}).then( (response) => {
               let res = response.data
+              this.getGoodsCount()
             })
         },
 

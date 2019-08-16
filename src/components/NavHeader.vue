@@ -33,12 +33,12 @@
                 v-show="!!loginUser">{{userName}}</a>
                 <a href="javascript:void(0)" class="navbar-link" 
                 v-on:click="loginState=false"
-                v-show="!loginUser">Login</a>
+                v-show="!loginUser">登录</a>
                 <a href="javascript:void(0)" class="navbar-link"
                 v-on:click="logout"
-                v-show="!!loginUser">Logout</a>
+                v-show="!!loginUser">退出</a>
                 <div class="navbar-cart-container" v-show="!!loginUser">
-                <span class="navbar-cart-count">2</span>
+                <span class="navbar-cart-count">{{userGoodsCount}}</span>
                 <a class="navbar-link navbar-cart-link" href="/#/userCart">
                     <svg class="navbar-cart-logo">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -88,6 +88,7 @@
 
 <script>
 import axios from 'axios';
+import { mapState, mapActions } from 'vuex'
 
 export default {
     //保存用户信息
@@ -96,26 +97,36 @@ export default {
             userName:"",
             userPwd:"",
             loginUser:"",
+            userId:"",
             errTips:false,
             loginState:true,
-            userCartList:null
+            userCartList:[],
         }
+    },
+
+    computed: {
+        ...mapState(['userGoodsCount'])
     },
 
     mounted:function(){
         this.checkLogin()
+        let num = localStorage.getItem("userGoodsCount")
+        this.setUserGoodsCount(num)
     },
     
     methods:{
+        ...mapActions(['setUserGoodsCount']),
         getLogin(){
             let userInfo={userName:this.userName,userPwd:this.userPwd}
             axios.post('/users/login',userInfo).then((res)=>{
                 //1.1 从后端获取用户名后赋值给loginUser，要么为空，要么有用户名
-                this.loginUser=res.data.result
+                this.loginUser=res.data.result.userName
+                this.userId = res.data.result.userId
                 if(res.data.statusCode===1 && res.data.result){
                     //1.2控制用户名密码错误提示是否显示
                     this.errTips=false
                     this.loginState=true
+                    this.getGoodsCount()
                 }else{
                     this.errTips=true
                     this.loginState=false
@@ -141,6 +152,17 @@ export default {
                     this.loginState=true
                 }
             })
+        },
+        async getGoodsCount() {
+            const {data:{result}} = await axios.get('/users/cartList')
+            let count = 0
+            result.forEach((item) => {
+                if (item.checked) {
+                    count += parseInt(item.productNum)
+                }
+            })
+            this.setUserGoodsCount(count)
+            localStorage.setItem("userGoodsCount", count);
         }
     }
 }
