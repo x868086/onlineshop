@@ -33,7 +33,7 @@ let loginMethod=(req,res,next)=>{
         // resjson(res,1,'login auth...',doc.userName)
         resjson(res,1,'login auth...',{userName:doc.userName,userId:doc.userId})
       }else{
-        resjson(res,1,'user not find',err)
+        resjson(res,1,'user not find',null)
       }
     }
   })
@@ -47,17 +47,18 @@ router.post('/login', function(req, res, next) {
 
 
 
-router.post('/logout', function(req, res, next) {
-    loginMethod(req,res,next)
+router.get('/logout', function(req, res, next) {
+    // loginMethod(req,res,next)
     res.clearCookie('userId', { path: '/' });
     res.clearCookie('userName', { path: '/' });
+    resjson(res,1,'logout',null);
 });
 
 
 router.get('/checkLogin',(req,res,next)=>{
       let userCookie=req.cookies.userName
       console.log(userCookie)
-      userCookie? resjson(res,1,'已登录',userCookie): resjson(res,0,'请登录',err)  
+      userCookie? resjson(res,1,'已登录',userCookie): resjson(res,0,'请登录',null)  
   })
 
   router.get('/cartList',(req,res,next)=>{
@@ -200,21 +201,70 @@ router.get('/checkLogin',(req,res,next)=>{
     let userId = req.cookies.userId,
         orderId = req.body.orderId,
         orderTotal = req.body.orderTotal
-        userModel.update({
-          "userId": userId
-        },{
-          "$push":{
-            "orderList":{
-              "orderId": orderId,
-              "orderTotal": orderTotal,
-              "orderStatus": 1,
-              "createDate": new Date().toLocaleString()
-            }
+        addressId = req.body.addressId
+        userModel.findOne({
+          "userId":userId
+        },(err, doc) => {
+          if(err){
+            return resjson(res,0,'获取用户信息失败',err)
           }
-        }, ((err, doc) => {
-          err? resjson(res,0,'订单支付失败!',err) : resjson(res,1,'订单支付成功!',doc)
+          let orderCartList = []
+          doc.cartList.map((e, i, a) =>{
+            if (e.checked) {
+              orderCartList.push(e) 
+            }
+          })
+          let addressInfo = doc.addressList.filter((e,i,a) => {
+            return e.addressId === addressId
+          })[0]
+
+          if (orderCartList.length>0 && addressInfo) {
+              userModel.update({
+                "userId": userId
+              },{
+                "$push":{
+                  "orderList":{
+                    "orderId": orderId,
+                    "orderTotal": orderTotal,
+                    "orderStatus": 1,
+                    "createDate": new Date().toLocaleString(),
+                    "goodsList": orderCartList,
+                    "addressInfo": addressInfo
+                  }
+                },
+                "cartList":[]
+              }, ((err, doc) => {
+                if (err) {
+                  resjson(res,0,'订单支付失败!',err)
+                } else {
+                  resjson(res,1,'订单支付成功!',doc)
+                } 
+              })
+              )
+          } else {
+            resjson(res,0,'订单支付失败!','订单信息不完整')
+          }
+          
+        })        
+
+  })
+
+  //支付成功后查询
+  router.get('/orderDetail', (req, res, next) => {
+    let userId = req.cookies.userId
+        orderId = req.query.orderId
+        userModel.findOne({
+          "userId":userId
+        },(err, doc) => {
+          if(err){
+            return resjson(res,0,'获取订单数据失败,用户信息错误',err)
+          }
+          let orderDetail = doc.orderList.filter((e, i, a) =>{
+            return e.orderId === orderId
+          })
+
+          return resjson(res,1,'获取订单数据成功',orderDetail)
         })
-        )
   })
 
 

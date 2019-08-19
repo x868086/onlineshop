@@ -51,7 +51,7 @@
         <div class="md-modal modal-msg md-modal-transition md-show">
           <div class="md-modal-inner" v-show="!loginState">
             <div class="md-top">
-              <div class="md-title">Login in</div>
+              <div class="md-title">账号登录</div>
               <button class="md-close" v-on:click="loginState=true">Close</button>
             </div>
             <div class="md-content">
@@ -64,13 +64,13 @@
                     <i class="icon IconPeople"></i>
                     <input type="text" tabindex="1" name="loginname"
                     v-model="userName"  
-                    class="regi_login_input regi_login_input_left" placeholder="User Name">
+                    class="regi_login_input regi_login_input_left" placeholder="用户名">
                   </li>
                   <li class="regi_form_input noMargin">
                     <i class="icon IconPwd"></i>
                     <input type="password" tabindex="2"  name="password"
                     v-model="userPwd"  
-                    class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="Password">
+                    class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
                   </li>
                 </ul>
               </div>
@@ -88,6 +88,7 @@
 
 <script>
 import axios from 'axios';
+import getGoodsCount from '../utils/getCartCount';
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -119,14 +120,14 @@ export default {
         getLogin(){
             let userInfo={userName:this.userName,userPwd:this.userPwd}
             axios.post('/users/login',userInfo).then((res)=>{
-                //1.1 从后端获取用户名后赋值给loginUser，要么为空，要么有用户名
-                this.loginUser=res.data.result.userName
-                this.userId = res.data.result.userId
                 if(res.data.statusCode===1 && res.data.result){
+                    //1.1 从后端获取用户名后赋值给loginUser，要么为空，要么有用户名
+                    this.loginUser=res.data.result.userName
+                    this.userId = res.data.result.userId                    
                     //1.2控制用户名密码错误提示是否显示
                     this.errTips=false
                     this.loginState=true
-                    this.getGoodsCount()
+                    getGoodsCount(axios,this.setUserGoodsCount)
                 }else{
                     this.errTips=true
                     this.loginState=false
@@ -135,11 +136,14 @@ export default {
         },
         logout(){
             //1.3登出，将登录用户信息清空，同时更改loginState，并将路由指向首页
-            axios.post('/users/logout').then(res=>{
+            axios.get('/users/logout').then((res)=>{
+                console.log(res)
                 if(res.data.statusCode===1){
                     this.loginUser=res.data.result
                     this.$router.push({path:'/'})
                 }
+            }).catch(error => {
+                console.log(error)
             })
 
         },
@@ -150,20 +154,24 @@ export default {
                     this.userName=res.data.result
                     this.errTips=false
                     this.loginState=true
+                } else if (res.data.statusCode===0 && res.data.msg === '请登录') {
+                    this.loginUser=''
+                    this.userName=''
                 }
             })
-        },
-        async getGoodsCount() {
-            const {data:{result}} = await axios.get('/users/cartList')
-            let count = 0
-            result.forEach((item) => {
-                if (item.checked) {
-                    count += parseInt(item.productNum)
-                }
-            })
-            this.setUserGoodsCount(count)
-            localStorage.setItem("userGoodsCount", count);
         }
+        // ,
+        // async getGoodsCount() {
+        //     const {data:{result}} = await axios.get('/users/cartList')
+        //     let count = 0
+        //     result.forEach((item) => {
+        //         if (item.checked) {
+        //             count += parseInt(item.productNum)
+        //         }
+        //     })
+        //     this.setUserGoodsCount(count)
+        //     localStorage.setItem("userGoodsCount", count);
+        // }
     }
 }
 </script>

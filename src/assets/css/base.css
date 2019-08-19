@@ -861,8 +861,8 @@ a:hover {
 }
 
 .btn--red:hover, .btn--red[href]:hover {
-  background-color: #f16f75;
-  border-color: #f16f75;
+  background-color: #ee7a23;
+  border-color: #ee7a23;
   color: #fff;
 }
 
@@ -881,7 +881,7 @@ a:hover {
 }
 
 .btn--m:hover{
-  background-color:lightcoral;
+  background-color:#ee7a23;
   color:white;
 }
 

@@ -87,6 +87,8 @@
 import '../assets/css/base.css';
 import '../assets/css/product.css';
 import '../assets/css/login.css';
+import getGoodsCount from '../utils/getCartCount';
+import { mapActions, mapState } from 'vuex';
 import axios from 'axios';
 
 
@@ -120,7 +122,8 @@ export default {
     computed:{
         sortup(){
             return this.getParam.sortFlag===1? true: false
-        }
+        },
+        ...mapState(['userGoodsCount'])
     },
 
     mounted:function(){
@@ -128,6 +131,7 @@ export default {
     },
 
     methods:{
+        ...mapActions(['setUserGoodsCount']),
         getGoodsList(isPage){
         // rap mock数据
         // axios.get("http://rap2api.taobao.org/app/mock/83412/goodList").then(res=>{
@@ -210,6 +214,7 @@ export default {
         addCartList(productId){
                 axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
                     res.data.codeSet===1 ? this.modelShowLogin=true : this.modelShow=true
+                    getGoodsCount(axios,this.setUserGoodsCount)
                 })
         },
 

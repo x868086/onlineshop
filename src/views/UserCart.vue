@@ -185,6 +185,7 @@ import NavBread from '../components/NavBread.vue';
 import model from '../components/model.vue';
 
 import axios from 'axios';
+import getGoodsCount from '../utils/getCartCount'                   
 import {mapState, mapActions} from 'vuex'
 
 export default {
@@ -239,22 +240,11 @@ export default {
     },
 
     methods:{
-        ...mapActions(['setUserGoodsCount']),
-        async getGoodsCount() {
-            const {data:{result}} = await axios.get('/users/cartList')
-            let count = 0
-            result.forEach((item) => {
-                if (item.checked) {
-                    count += parseInt(item.productNum)
-                }
-            })
-            this.setUserGoodsCount(count)
-            localStorage.setItem("userGoodsCount", count);
-        },        
+        ...mapActions(['setUserGoodsCount']),      
         init(){
             axios.get("/users/cartList").then((res)=>{
                 this.userCartList=res.data.result
-                this.getGoodsCount()
+                getGoodsCount(axios,this.setUserGoodsCount)
             })
         },
 
@@ -284,7 +274,7 @@ export default {
             item.productNum--;
           }
           axios.post("/users/setnum",{'productId':this.productId,'productNum':item.productNum}).then(res=>{
-            this.getGoodsCount()
+            getGoodsCount(axios,this.setUserGoodsCount)
           }).catch(err => {
             console.log(err)
           })
@@ -293,7 +283,7 @@ export default {
         updateCartList(item,flag){
             axios.post('/users/updateCartList',{'productId':item.productId,'flag':flag}).then( (response) => {
               let res = response.data
-              this.getGoodsCount()
+              getGoodsCount(axios,this.setUserGoodsCount)
             })
         },
 

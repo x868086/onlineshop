@@ -25,7 +25,7 @@
             </p>
             <div class="order-create-btn-wrap">
               <div class="btn-l-wrap">
-                <router-link class="btn btn--m" to="/cart">购物车</router-link>
+                <router-link class="btn btn--m" to="/userCart">购物车</router-link>
               </div>
               <div class="btn-r-wrap">
                 <router-link class="btn btn--m" to="/">首页</router-link>
@@ -42,6 +42,8 @@
     import NavFooter from '../components/NavFooter'
     import NavBread from '../components/NavBread'
     import {currency} from '../utils/currency'
+    import getGoodsCount from '../utils/getCartCount'
+    import {mapState, mapActions} from 'vuex'
     import axios from 'axios'
     export default{
         data(){
@@ -49,6 +51,9 @@
                 orderId:'',
                 orderTotal:0
             }
+        },
+        computed:{
+          ...mapState(['userGoodsCount'])
         },
         components:{
           NavHeader,
@@ -58,23 +63,28 @@
         filters:{
           currency:currency
         },
-        mounted(){
-            var orderId = this.$route.query.orderId;
+        methods:{
+        ...mapActions(['setUserGoodsCount'])
+        },
+        async mounted(){
+            let orderId = this.$route.query.orderId;
             console.log("orderId:"+orderId);
             if(!orderId){
               return;
             }
-            axios.get("/users/orderDetail",{
+            try {
+              let {data:{result}} = await axios.get('/users/orderDetail',{
                 params:{
                   orderId:orderId
                 }
-            }).then((response)=>{
-                let res = response.data;
-                if(res.status=='0'){
-                    this.orderId = orderId;
-                    this.orderTotal = res.result.orderTotal;
-                }
-            });
+              })
+            this.orderId = result[0].orderId
+            this.orderTotal = result[0].orderTotal
+            getGoodsCount(axios,this.setUserGoodsCount)
+            } catch(err) {
+              console.log(err)
+            }
+
         }
     }
 </script>

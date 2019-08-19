@@ -239,7 +239,12 @@ export default {
         },
 
         getConfirm(){
-            this.$router.push({path: '/orderConfirm', query: {orderId:OrderId()}})
+            this.$router.push({path: '/orderConfirm', 
+            query: {
+                    orderId:OrderId(),
+                    addressId:this.selectAddressId
+                }
+            })
         }
     },
     

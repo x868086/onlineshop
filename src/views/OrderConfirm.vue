@@ -108,7 +108,7 @@
                     <span>{{discount | currency('￥')}}</span>
                     </li> -->
                     <li>
-                    <span>Tax:</span>
+                    <span>税金:</span>
                     <span>{{tax | currency('￥')}}</span>
                     </li>
                     <li class="order-total-price">
@@ -183,11 +183,15 @@ export default {
         },
         toPayment() {
             let orderId = this.$route.query.orderId,
+                addressId = this.$route.query.addressId,
                 orderTotal = this.ordertotal
-            axios.post('/users/toPayment',{orderId:orderId,orderTotal:orderTotal}).then((response) => {
+            axios.post('/users/toPayment',{orderId:orderId,orderTotal:orderTotal,addressId:addressId}).then((response) => {
                 let res = response.data
-                console.log(res)
-                this.$router.push({path:'/orderSuccess',query: {orderId: orderId}})
+                if (res.result.nModified && res.result.ok===1) {
+                    console.log(res)
+                    this.$router.push({path:'/orderSuccess',query: {orderId: orderId}})
+                }
+
             })
         }
 
