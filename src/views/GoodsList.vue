@@ -207,6 +207,9 @@ export default {
                 }else{
                     this.goodlist=[]
                 }
+            this.$nextTick(() => {
+                this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+            });                
 
             })
         },
