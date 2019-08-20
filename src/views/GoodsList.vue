@@ -216,9 +216,13 @@ export default {
 
         addCartList(productId){
                 axios.post("/goods/addcart",{'productId':productId}).then((res)=>{
-                    res.data.codeSet===1 ? this.modelShowLogin=true : this.modelShow=true
-                    getGoodsCount(axios,this.setUserGoodsCount)
-                })
+                    if (res.data.codeSet===1) {
+                        this.modelShowLogin=true
+                        getGoodsCount(axios,this.setUserGoodsCount)                        
+                    } else {
+                        this.modelShow=true                        
+                    }
+                }).catch(err => console.log(err))
         },
 
         modelDisplay(){

@@ -144,7 +144,7 @@
         <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="deletConfirm">确定</a>
         <a href="javascript:;" class="btn btn--m" slot="modelClose" v-on:click="modelShow=false">取消</a>
         <!-- <router-link to="address" class="btn btn--m" slot="modelClose" v-on:click="modelDisplay">取消</router-link> -->
-    </model>
+    </model>   
     <nav-footer></nav-footer>
    </div>
 </template>
@@ -188,6 +188,9 @@ export default {
     methods:{
         init(){
             axios.get('/users/address').then((response) => {
+                if (!response.data.result) {
+                    return this.$router.push({path:'/'})
+                }
                 let res=response.data.result.addressList
                 this.addressList=res
                 this.addressList.forEach((e, i, a) => {
