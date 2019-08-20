@@ -59,6 +59,7 @@
                 <div class="error-wrap">
                   <span class="error error-show" v-show="errTips">用户名或者密码错误</span>
                 </div>
+                <form action="#">
                 <ul>
                   <li class="regi_form_input">
                     <i class="icon IconPeople"></i>
@@ -70,9 +71,13 @@
                     <i class="icon IconPwd"></i>
                     <input type="password" tabindex="2"  name="password"
                     v-model="userPwd"  
-                    class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
+                    class="regi_login_input regi_login_input_left login-input-no input_text" 
+                    placeholder="密码"
+                    autocomplete='pwd'>
                   </li>
                 </ul>
+                </form>
+
               </div>
               <div class="login-wrap">
                 <a href="javascript:;" class="btn-login"
@@ -90,6 +95,7 @@
 import axios from 'axios';
 import getGoodsCount from '../utils/getCartCount';
 import { mapState, mapActions } from 'vuex'
+import CryptoJS from 'crypto-js';
 
 export default {
     //保存用户信息
@@ -118,7 +124,7 @@ export default {
     methods:{
         ...mapActions(['setUserGoodsCount']),
         getLogin(){
-            let userInfo={userName:this.userName,userPwd:this.userPwd}
+            let userInfo={userName:this.userName,userPwd:CryptoJS.MD5(this.userPwd).toString()}
             axios.post('/users/login',userInfo).then((res)=>{
                 if(res.data.statusCode===1 && res.data.result){
                     //1.1 从后端获取用户名后赋值给loginUser，要么为空，要么有用户名
@@ -137,10 +143,8 @@ export default {
         logout(){
             //1.3登出，将登录用户信息清空，同时更改loginState，并将路由指向首页
             axios.get('/users/logout').then((res)=>{
-                console.log(res)
                 if(res.data.statusCode===1){
                     this.loginUser=res.data.result
-                    this.$router.push({path:'/'})
                 }
             }).catch(error => {
                 console.log(error)

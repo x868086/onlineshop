@@ -62,7 +62,7 @@ router.get("/",(req,res,next)=>{
 //2.1添加到购物车
 router.post("/addcart",(req,res,next)=>{
     let productId=req.body.productId
-    let userId='100000077'
+    let userId=req.cookies.userId
     
 //2.2 查询用户，匹配上之后继续查询前端POST的商品，然后在商品字段中增加
 //productNum和checked字段，将修改后的商品信息保存到用户的cartList字段
