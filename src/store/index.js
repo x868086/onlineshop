@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = () => {
   return new Vuex.Store({
     state: {
-      userGoodsCount : 0
+      userGoodsCount: 0
     },
     mutations: {
       setUserGoodsCount (state, payload) {

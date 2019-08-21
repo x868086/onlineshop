@@ -19,6 +19,17 @@
     </div>
 </template>
 
+<script>
+    export default {
+        props:['modelShow'],
+        methods:{
+            closeModel(){
+                this.$emit("closeModel")
+            }
+        }
+    }
+</script>
+
 <style>
     .login-wrap{
         text-align:center;
@@ -37,20 +48,5 @@
         margin-left:20px;
         margin-right:20px;
     }
-    
-
 </style>
-
-
-<script>
-export default {
-    props:['modelShow'],
-    methods:{
-        closeModel(){
-            this.$emit("closeModel")
-        }
-    }
-}
-</script>
-
 
