@@ -147,3 +147,45 @@ a {
   visibility: visible;
   height: auto;
 }
+
+
+@media only screen and (max-width: 767px) {
+  .md-title {
+    display:none;
+  }
+  .confirm-tips form ul {
+    position:relative;
+    top:15px;
+  }
+  .error-wrap .error {
+    position: absolute;
+    top: 15px;
+  }
+  .md-modal .md-close {
+    display: block;
+  }
+  .md-modal .md-close {
+    position: absolute;
+    top: 0px;
+  }
+  .regi_form_input .regi_login_input {
+    position: relative !important;
+    left: 45px !important;
+    top: -35px !important;
+    padding: 9px 0 10px !important;
+    width: 270px;
+    font-size: 14px !important;
+    zoom: 1 !important;
+    border: none !important;
+    color: #333 !important;
+    height: 23px;
+    line-height: 23px !important;
+    background: 0 0!important;
+  }
+  .login-wrap>.btn.btn--m {
+    padding-left: 0px !important; 
+    padding-right: 0px !important;
+    width: 100px !important;
+    text-align: center !important;
+  }
+}

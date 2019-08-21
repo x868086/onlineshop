@@ -189,6 +189,7 @@ export default {
         .then(res => {
           if (res.data.statusCode === 1) {
             this.loginUser = res.data.result;
+            this.$router.push({path:'/'})
           }
         })
         .catch(error => {
